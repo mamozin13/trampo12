@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Responda e Ganhe</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4CAF50, #81C784);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      width: 90%;
+      max-width: 450px;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    h1, h2 {
+      color: #2e7d32;
+    }
+    .question {
+      font-size: 20px;
+      margin: 20px 0;
+      color: #333;
+      transition: all 0.3s ease-in-out;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .question:hover {
+      background-color: #e8f5e9;
+      transform: translateY(-2px);
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      background-color: #66bb6a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background-color: #4CAF50;
+    }
+    .hidden { display: none; }
+    .result {
+      font-size: 18px;
+      color: #1b5e20;
+      margin-top: 15px;
+    }
+    .saldo {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .progress {
+      width: 100%;
+      background: #eee;
+      height: 12px;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #43a047;
+      width: 0%;
+      border-radius: 6px;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="color: #1b5e20;">🤑 Ganhe dinheiro respondendo perguntas!</h1>
+    <p style="font-size: 15px; color: #555; margin-top: -10px;">
+      Responda o quiz e receba via PIX após o pagamento da taxa de verificação.
+    </p>
+
+    <div id="quiz">
+      <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="question" id="question">Carregando...</div>
+      <div id="opcoes"></div>
+      <div class="result" id="result"></div>
+      <div class="saldo" id="saldo"></div>
+    </div>
+
+    <div id="depoimentos" style="margin-top: 30px; text-align: left;">
+      <h3 style="color: #2e7d32;">💬 O que dizem nossos usuários</h3>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <img src="https://i.pravatar.cc/40?img=5" style="border-radius: 50%;">
+        <div>
+          <strong>Camila Duarte</strong><br>
+          <span style="font-size: 14px;">“Achei que era golpe, mas recebi R$ 250 no mesmo dia! Obrigada 🙏”</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+        <img src="https://i.pravatar.cc/40?img=8" style="border-radius: 50%;">
+        <div>
+          <strong>Rodrigo Silva</strong><br>
+          <span style="font-size: 14px;">“Usei o valor pra pagar uma conta urgente. Funcionou mesmo!”</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://i.pravatar.cc/40?img=12" style="border-radius: 50%;">
+        <div>
+          <strong>Larissa Almeida</strong><br>
+          <span style="font-size: 14px;">“Recebi em menos de 24 horas! Já indiquei pra todo mundo.”</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="saque" class="hidden">
+      <h2>🎊 Parabéns!</h2>
+      <p>Você acumulou <strong id="valorTotal"></strong></p>
+      <button class="btn" onclick="liberarSaque()">Solicitar Saque</button>
+    </div>
+
+    <div id="bloqueio" class="hidden">
+      <h2>🔒 Verificação necessária</h2>
+      <p>Para sua segurança, complete a verificação abaixo para liberar seu saque.</p>
+      <p style="font-size: 14px; color: #c62828; margin-top: 10px;">
+        ⚠️ Assim que o pagamento da taxa for confirmado, seu saque será liberado em até <strong>24h</strong>.
+      </p>
+      <a class="btn" href="https://pay.cakto.com.br/n2bdtn3_344681" target="_blank">🔐 Iniciar Verificação Segura</a>
+    </div>
+
+    <footer style="margin-top: 60px; padding: 20px; background-color: #f5f5f5; text-align: center; font-size: 13px; color: #555;">
+      <div style="margin-bottom: 10px;">
+        <strong>Marcas que apoiam nossas pesquisas:</strong>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; align-items: center;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/75/Netflix_icon.svg" alt="Netflix" style="height: 28px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" style="height: 24px;">
+      </div>
+      <p style="margin-top: 15px;">&copy; 2024 Responda e Ganhe. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+
+  <script>
+    const perguntas = [
+      { pergunta: "Você prefere Coca-Cola ou Pepsi?", opcoes: [{ texto: "Coca-Cola", valor: 10 }, { texto: "Pepsi", valor: 10 }, { texto: "Nenhuma", valor: 5 }] },
+      { pergunta: "O que achou do novo hambúrguer do McDonald's?", opcoes: [{ texto: "Muito bom", valor: 15 }, { texto: "Normal", valor: 10 }, { texto: "Não gostei", valor: 5 }] },
+      { pergunta: "Você usa Amazon ou Mercado Livre para compras?", opcoes: [{ texto: "Amazon", valor: 12 }, { texto: "Mercado Livre", valor: 12 }, { texto: "Ambos", valor: 15 }] },
+      { pergunta: "Qual serviço de streaming você mais utiliza?", opcoes: [{ texto: "Netflix", valor: 10 }, { texto: "Prime Video", valor: 10 }, { texto: "Outro", valor: 10 }] },
+      { pergunta: "Você já pediu comida por iFood ou Rappi?", opcoes: [{ texto: "iFood", valor: 15 }, { texto: "Rappi", valor: 15 }, { texto: "Nunca usei", valor: 8 }] },
+      { pergunta: "Qual refrigerante você mais consome?", opcoes: [{ texto: "Coca-Cola", valor: 12 }, { texto: "Fanta", valor: 10 }, { texto: "Guaraná", valor: 10 }] },
+      { pergunta: "Você já usou cupons do Burger King?", opcoes: [{ texto: "Sim", valor: 12 }, { texto: "Não", valor: 10 }, { texto: "Nunca fui", valor: 8 }] },
+      { pergunta: "Você confia nas entregas do Mercado Livre?", opcoes: [{ texto: "Sim", valor: 10 }, { texto: "Mais ou menos", valor: 8 }, { texto: "Não", valor: 5 }] },
+      { pergunta: "Qual lanche é seu favorito no McDonald's?", opcoes: [{ texto: "Big Mac", valor: 15 }, { texto: "Cheddar McMelt", valor: 15 }, { texto: "Outro", valor: 10 }] },
+      { pergunta: "Você recomendaria Netflix para um amigo?", opcoes: [{ texto: "Sim", valor: 10 }, { texto: "Talvez", valor: 8 }, { texto: "Não", valor: 5 }] }
+    ];
+
+    let perguntaAtual = 0;
+    let saldo = 0;
+
+    function exibirPergunta() {
+      if (perguntaAtual < perguntas.length) {
+        const q = perguntas[perguntaAtual];
+        document.getElementById("question").textContent = q.pergunta;
+        document.getElementById("result").textContent = "";
+        document.getElementById("saldo").textContent = `💰 Saldo atual: R$ ${saldo.toFixed(2)}`;
+        atualizarProgressBar();
+
+        const opcoesDiv = document.getElementById("opcoes");
+        opcoesDiv.innerHTML = "";
+
+        q.opcoes.forEach(opcao => {
+          const btn = document.createElement("button");
+          btn.className = "btn";
+          btn.textContent = opcao.texto;
+          btn.onclick = () => responderPergunta(opcao.valor);
+          opcoesDiv.appendChild(btn);
+        });
+      } else {
+        document.getElementById("quiz").classList.add("hidden");
+        document.getElementById("valorTotal").textContent = `R$ ${saldo.toFixed(2)}`;
+        document.getElementById("saque").classList.remove("hidden");
+      }
+    }
+
+    function responderPergunta(valor) {
+      saldo += valor;
+      document.getElementById("result").textContent = `🎁 Você ganhou R$ ${valor.toFixed(2)}!`;
+      perguntaAtual++;
+      setTimeout(exibirPergunta, 1500);
+    }
+
+    function liberarSaque() {
+      document.getElementById("saque").classList.add("hidden");
+      document.getElementById("bloqueio").classList.remove("hidden");
+    }
+
+    function atualizarProgressBar() {
+      const progresso = (perguntaAtual / perguntas.length) * 100;
+      document.getElementById("progressBar").style.width = progresso + "%";
+    }
+
+    window.onload = exibirPergunta;
+  </script>
+</body>
+</html>
